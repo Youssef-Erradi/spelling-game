@@ -1,4 +1,5 @@
 # encoding:utf-8
+import gui.Constences as CONSTS
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
@@ -6,7 +7,6 @@ from gui.GameWindow import GameWindow
 from classes.Player import Player
 
 class MainWindow():
-    AGE_CATEGORIES = (" < 10 ans"," >= 10 ans & < 18 ans"," >= 18 ans")
 
     def __init__(self):
         self.root = tk.Tk()
@@ -24,7 +24,7 @@ class MainWindow():
         self.txt_nom.focus()
         
         tk.Label(self.root, text="Votre age").place(x=50, y=100)
-        self.cb_age = ttk.Combobox(self.root, values=MainWindow.AGE_CATEGORIES)
+        self.cb_age = ttk.Combobox(self.root, values=CONSTS.AGE_CATEGORIES)
         self.cb_age.place(x=150, y=100)
         self.cb_age.current(0)
         

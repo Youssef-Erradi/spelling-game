@@ -1,12 +1,12 @@
 # encoding:utf-8
 from tkinter import messagebox
 from _tkinter import TclError
+import gui.Constences as CONSTS
 import tkinter as tk
 import time as tm
 import random as rd
 
 class GameWindow(tk.Toplevel):
-    LEVELS = ("easy", "intermediate", "hard")
     def __init__(self, master=None, cnf={}, player=None):
         super().__init__(master, cnf)
         self.master = master
@@ -70,7 +70,7 @@ class GameWindow(tk.Toplevel):
     
     def _load_words(self):
         if len(self.words) == 0 :
-            self.words = eval(open(file=f"../files/levels/{GameWindow.LEVELS[self.player.get_level()]}.json").readline().upper().strip()) 
+            self.words = eval(open(file=f"../files/levels/{CONSTS.LEVELS[self.player.get_level()]}.json").readline().upper().strip()) 
     
     def _select_random_word(self):
         if len(self.words) == 0 :
@@ -145,9 +145,9 @@ class GameWindow(tk.Toplevel):
             messagebox.showwarning("Boîte de message", "Reéssayer")
 
     def _save_to_scoreboard(self):
-        file = open(file=f"../files/scoreboards/{GameWindow.LEVELS[self.player.get_level()]}.json")
+        file = open(file=f"../files/scoreboards/{CONSTS.LEVELS[self.player.get_level()]}.json")
         scoreboard = eval(file.readline().strip())
         scoreboard.append(dict(self.player))
-        file = open(file=f"../files/scoreboards/{GameWindow.LEVELS[self.player.get_level()]}.json", mode="w")
+        file = open(file=f"../files/scoreboards/{CONSTS.LEVELS[self.player.get_level()]}.json", mode="w")
         file.write( str(scoreboard) )
         file.close()
