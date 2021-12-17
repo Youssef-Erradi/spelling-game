@@ -1,6 +1,6 @@
 # encoding:utf-8
-import gui.Constences as CONSTS
 import tkinter as tk
+from classes.Enums import AgeCategories
 from tkinter import ttk
 from tkinter import messagebox
 from gui.GameWindow import GameWindow
@@ -24,7 +24,7 @@ class MainWindow():
         self.txt_nom.focus()
         
         tk.Label(self.root, text="Votre age").place(x=50, y=100)
-        self.cb_age = ttk.Combobox(self.root, values=CONSTS.AGE_CATEGORIES)
+        self.cb_age = ttk.Combobox(self.root, values=[age.value for age in AgeCategories])
         self.cb_age.place(x=150, y=100)
         self.cb_age.current(0)
         
@@ -37,7 +37,10 @@ class MainWindow():
         name  = self.txt_nom.get().strip()
         level = self.cb_age.current()
         if name == "" or level == -1:
-            messagebox.showwarning("Boîte de message", "Entrez les informations demandées")
+            messagebox.showwarning("Boîte de message", "Remplissez les informations demandées")
             return
         self.root.withdraw()
         GameWindow(self.root, player=Player(name=name, level=level))
+
+if __name__ == '__main__':
+    MainWindow()

@@ -1,12 +1,13 @@
 # encoding:utf-8
 from tkinter import messagebox
 from _tkinter import TclError
-import gui.Constences as CONSTS
+from classes.Enums import LevelCategories
 import tkinter as tk
 import time as tm
 import random as rd
 
 class GameWindow(tk.Toplevel):
+    
     def __init__(self, master=None, cnf={}, player=None):
         super().__init__(master, cnf)
         self.master = master
@@ -22,15 +23,6 @@ class GameWindow(tk.Toplevel):
         self._basic_config()
         self._create_widgets(True)
      
-    def _setup_new_word(self):
-        if len(self.words) == 0 or self.word == "":
-            return
-        self.words.remove(self.word)
-        self._select_random_word()
-        self._delete_lettre_buttons()
-        self._delete_guess_labels()
-        self._create_widgets()
-        
     def _basic_config(self):
         self.title(f"Spelling Game : {self.player.get_name()}")
         width = 400
@@ -39,15 +31,22 @@ class GameWindow(tk.Toplevel):
         y = int((self.winfo_screenheight()/2) - (height/2))
         self.geometry(f"{width}x{height}+{x}+{y}")
         self.focus()
+
+    def _setup_new_word(self):
+        if len(self.words) == 0 or self.word == "":
+            return
+        self.words.remove(self.word)
+        self._select_random_word()
+        self._delete_lettre_buttons()
+        self._delete_guess_labels()
+        self._create_widgets()      
     
     def _create_widgets(self, init=False):
-        if not init:
-            self.btn_valider.destroy()
-            self.score_label.config(text=f"Votre score est {self.player.get_score()} points", font=("Arial", 10))
-            
         try :
+            if not init:
+                self.btn_valider.destroy()
+                self.score_label["text"] = f"Votre score est : {self.player.get_score()} points"  
             seconds = 5-self.player.get_level()
-            
             self.hint_label = tk.Label(self, text=f"Votre mot est : {self.word} ({seconds} secondes)", font=("Arial", 13))
             self.hint_label.place(x=60, y=15)
             self.hint_label.after(seconds*1000, lambda : self.hint_label.destroy())
@@ -61,16 +60,19 @@ class GameWindow(tk.Toplevel):
             self.btn_valider = tk.Button(self, text="Valider", font=("Arial", 12), command=lambda : self._check())
             self.btn_valider.place(x=len(self.word)*55, y=240)
             self._create_guess_labels()
-            if init:
-                self.score_label = tk.Label(self, text=f"Votre score est : {self.player.get_score()} points", font=("Arial", 10))
-            self.score_label.place(x=220, y=275)
+            self._create_score_label()
             self._animate_letter_buttons()
         except TclError:
             pass 
     
+    def _create_score_label(self):
+        self.score_label = tk.Label(self, text=f"Votre score est : {self.player.get_score()} points", font=("Arial", 10))
+        self.score_label.place(x=220, y=275)
+    
     def _load_words(self):
         if len(self.words) == 0 :
-            self.words = eval(open(file=f"../files/levels/{CONSTS.LEVELS[self.player.get_level()]}.json").readline().upper().strip()) 
+            with open(file=f"../files/levels/{list(LevelCategories)[self.player.get_level()].value}.json") as file :
+                self.words = eval( file.readline().upper().strip()) 
     
     def _select_random_word(self):
         if len(self.words) == 0 :
@@ -99,12 +101,12 @@ class GameWindow(tk.Toplevel):
         letters = list( self.word )
         rd.shuffle(letters)
         self.letter_buttons.clear()
-        X, Y = 70, 30
+        X, Y = 70, 20
         for letter in letters :
-            button = tk.Button(self, text=letter)
+            button = tk.Button(self, text=letter, font=("Arial", 10))
             button['command'] = lambda btn=button : self._on_click_letter_button(btn)
             button.place( x=X , y=Y)
-            X += 30
+            X += 50
             self.letter_buttons.append( button )
      
     def _delete_lettre_buttons(self):
@@ -118,7 +120,7 @@ class GameWindow(tk.Toplevel):
                 rd.choice(self.letter_buttons).place(y=Y)
                 self.update()
                 Y += 1
-                tm.sleep((5-self.player.get_level())/150)
+                tm.sleep((5-self.player.get_level())/100)
                 if Y > 250 :
                     messagebox.showerror("Boîte de message", "Perdu")
                     break
@@ -145,9 +147,8 @@ class GameWindow(tk.Toplevel):
             messagebox.showwarning("Boîte de message", "Reéssayer")
 
     def _save_to_scoreboard(self):
-        file = open(file=f"../files/scoreboards/{CONSTS.LEVELS[self.player.get_level()]}.json")
+        file = open(file=f"../files/scoreboards/{list(LevelCategories)[self.player.get_level()].value}.json")
         scoreboard = eval(file.readline().strip())
         scoreboard.append(dict(self.player))
-        file = open(file=f"../files/scoreboards/{CONSTS.LEVELS[self.player.get_level()]}.json", mode="w")
-        file.write( str(scoreboard) )
-        file.close()
+        with open(file=f"../files/scoreboards/{list(LevelCategories)[self.player.get_level()].value}.json", mode="w") as file :
+            file.write( str(scoreboard).replace("'", "\"") )
