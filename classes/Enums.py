@@ -10,7 +10,3 @@ class LevelCategories(Enum):
     EASY = "easy"
     INTERMEDIATE = "intermediate"
     HARD = "hard"
-
-if __name__ == '__main__':
-    for i in LevelCategories.name(""):
-        print( i ) 

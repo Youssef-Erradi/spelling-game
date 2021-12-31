@@ -1,3 +1,5 @@
+tests/*
+
 #Eclipse/PyDev Specific GitIgnore
 *.pydevproject
 .project
