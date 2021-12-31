@@ -42,3 +42,4 @@ class MainWindow(tk.Tk):
 if __name__ == '__main__':
     MainWindow()
     tk.mainloop()
+    exit(0)

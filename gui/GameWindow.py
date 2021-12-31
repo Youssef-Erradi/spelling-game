@@ -25,7 +25,7 @@ class GameWindow(tk.Toplevel):
      
     def _basic_config(self):
         self.title(f"Spelling Game : {self.player.get_name()}")
-        width = 400
+        width = 500
         height = 300
         x = int((self.winfo_screenwidth()/2) - (width/2))
         y = int((self.winfo_screenheight()/2) - (height/2))
@@ -48,7 +48,7 @@ class GameWindow(tk.Toplevel):
                 self.score_label["text"] = f"Votre score est : {self.player.get_score()} points"  
             seconds = 5-self.player.get_level()
             self.hint_label = tk.Label(self, text=f"Votre mot est : {self.word} ({seconds} secondes)", font=("Arial", 13))
-            self.hint_label.place(x=60, y=15)
+            self.hint_label.place(x=80, y=15)
             self.hint_label.after(seconds*1000, lambda : self.hint_label.destroy())
             for i in range(seconds):
                 self.hint_label.config(text = f"Votre mot est '{self.word}' ({seconds-i} secondes)")
@@ -59,6 +59,8 @@ class GameWindow(tk.Toplevel):
             canvas.place(x=-2, y=232)
             self.btn_valider = tk.Button(self, text="Valider", font=("Arial", 12), command=lambda : self._check())
             self.btn_valider.place(x=len(self.word)*55, y=240)
+            self.btn_effacer = tk.Button(self, text="Réinitialiser", font=("Arial", 12), command=lambda : self._reset())
+            self.btn_effacer.place(x=len(self.word)*85, y=240)
             self._create_guess_labels()
             self._create_score_label()
             self._animate_letter_buttons()
@@ -145,6 +147,12 @@ class GameWindow(tk.Toplevel):
             self._setup_new_word()
         else:
             messagebox.showwarning("Boîte de message", "Reéssayer")
+
+    def _reset(self):
+        for btn in self.letter_buttons:
+            btn["state"] = "normal"
+        for lbl in self.letter_labels:
+            lbl["text"] = ""
 
     def _save_to_scoreboard(self):
         file = open(file=f"../files/scoreboards/{list(LevelCategories)[self.player.get_level()].value}.json")
