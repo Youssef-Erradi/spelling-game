@@ -17,17 +17,23 @@ class MainWindow(tk.Tk):
         margin_y = int((self.winfo_screenheight()/2) - (window_height/2))
         self.geometry(f"{window_width}x{window_height}+{margin_x}+{margin_y}")
         
-        tk.Label(self, text="Votre nom").place(x=50, y=50)
-        self.txt_nom = tk.Entry(self)
+        font = ("Calibri Light", 12)
+        
+        tk.Label(self, text="Votre nom", font=font).place(x=50, y=50)
+        self.txt_nom = ttk.Entry(self, font=font )
         self.txt_nom.place(x=150, y=50)
         self.txt_nom.focus()
         
-        tk.Label(self, text="Votre age").place(x=50, y=100)
-        self.cb_age = ttk.Combobox(self, values=[age.value for age in AgeCategories])
+        tk.Label(self, text="Votre age", font=font).place(x=50, y=100)
+        self.cb_age = ttk.Combobox(self, values=[age.value for age in AgeCategories], font=font)
         self.cb_age.place(x=150, y=100)
         self.cb_age.current(0)
         
-        self.btn_commencez = tk.Button(self, text="Commancez", font=("Calibri Light",13), command=self._commencez)
+        style = ttk.Style()
+        style.configure("S.TButton", font = ("Calibri Light", 13), foreground = "#117243")
+        style.configure("R.TButton", font = ("Calibri Light", 13), foreground = "#E20338")
+        
+        self.btn_commencez = ttk.Button(self, text="Commancez", style="S.TButton", command=self._commencez)
         self.btn_commencez.place(x=150, y=180)
 
     def _commencez(self):
