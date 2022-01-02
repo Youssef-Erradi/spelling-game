@@ -32,9 +32,8 @@ class GameWindow(tk.Toplevel):
         self.protocol("WM_DELETE_WINDOW", self._on_close)
     
     def _on_close(self):
+        self.wm_withdraw()
         messagebox.showerror("Boîte de message", "Partie Annulée")
-        self.master.deiconify()
-        self.destroy()
     
     def _setup_new_word(self):
         if len(self.words) == 0 or self.word == "":
