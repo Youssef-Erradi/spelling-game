@@ -7,7 +7,7 @@ import random as rd
 
 class GameWindow(tk.Toplevel):
     
-    def __init__(self, master=None, cnf={}, player=None):
+    def __init__(self, master, player, cnf={}):
         super().__init__(master, cnf)
         self.master = master
         self.player = player
@@ -29,8 +29,13 @@ class GameWindow(tk.Toplevel):
         x = int((self.winfo_screenwidth()/2) - (width/2))
         y = int((self.winfo_screenheight()/2) - (height/2))
         self.geometry(f"{width}x{height}+{x}+{y}")
-        self.focus()
-
+        self.protocol("WM_DELETE_WINDOW", self._on_close)
+    
+    def _on_close(self):
+        messagebox.showerror("Boîte de message", "Partie Annulée")
+        self.master.deiconify()
+        self.destroy()
+    
     def _setup_new_word(self):
         if len(self.words) == 0 or self.word == "":
             return
