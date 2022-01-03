@@ -29,7 +29,7 @@ class GameWindow(tk.Toplevel):
         x = int((self.winfo_screenwidth()/2) - (width/2))
         y = int((self.winfo_screenheight()/2) - (height/2))
         self.geometry(f"{width}x{height}+{x}+{y}")
-        self.protocol("WM_DELETE_WINDOW", self._on_close)
+        # self.protocol("WM_DELETE_WINDOW", self._on_close)
     
     def _on_close(self):
         self.wm_withdraw()

@@ -20,7 +20,7 @@ class MainWindow(tk.Tk):
         
         font = ("Calibri Light", 12)
         
-        tk.Label(self, text="Votre nom", font=font).place(x=50, y=50)
+        tk.Label(self, text="Votre nom ", font=font).place(x=50, y=50)
         self.txt_nom = ttk.Entry(self, font=font )
         self.txt_nom.place(x=150, y=50)
         self.txt_nom.focus()
@@ -47,8 +47,8 @@ class MainWindow(tk.Tk):
         if name == "" or level == -1:
             messagebox.showwarning("Boîte de message", "Remplissez les informations demandées")
             return
-        GameWindow(self, player=Player(name=name, level=level))
         self.withdraw()
+        GameWindow(self, player=Player(name=name, level=level))
         
     def _scoreboard(self):
         ScoreboardWindow(self)
